@@ -1,0 +1,19 @@
+{
+  "days": [
+    {
+      "userId": "user-001",
+      "dateKey": "2026-03-23",
+      "displayDate": "Mar 23, 2026",
+      "budget": 33,
+      "spent": 3,
+      "health": 0.9090909090909091,
+      "expenses": [
+        {
+          "desc": "33",
+          "amt": 3,
+          "time": "12:46:10 PM"
+        }
+      ]
+    }
+  ]
+}

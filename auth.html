@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Spentree</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Outfit:wght@300;400;600;700;800&family=Press+Start+2P&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="auth.css?v=6">
+</head>
+<body>
+<canvas id="bg"></canvas>
+<div class="ambient-glow glow-1"></div>
+<div class="ambient-glow glow-2"></div>
+<div class="ambient-glow glow-3"></div>
+<div class="fireflies">
+  <div class="firefly"></div><div class="firefly"></div><div class="firefly"></div><div class="firefly"></div>
+  <div class="firefly"></div><div class="firefly"></div><div class="firefly"></div><div class="firefly"></div>
+</div>
+
+<!-- LOGIN -->
+<div class="page" id="pg-login">
+  <div class="card">
+    <div class="lp">
+      <div class="lp-logo">Spent<span style="color:var(--warning-color)">ree</span></div>
+      <div class="lp-tree">
+        <canvas id="lt1" width="320" height="380"></canvas>
+      </div>
+      <div class="lp-bottom">
+        <div class="lp-quote">Every rupee saved<br>is a <em>seed planted.</em></div>
+        <div class="lp-desc">Track your spending, grow your forest, and build habits that last a lifetime.</div>
+      </div>
+    </div>
+    <div class="rp">
+      <div class="tabs">
+        <button class="tab active" onclick="switchTo('login')">Sign In</button>
+        <button class="tab" onclick="switchTo('register')">Register</button>
+      </div>
+      <div class="ftitle">Welcome<br><em class="text-gradient">back.</em></div>
+      <div class="fsub">New here? <a onclick="switchTo('register')">Create your forest →</a></div>
+      <div class="field">
+        <label>Email Address</label>
+       
+        <input type="email" id="l-email" placeholder="you@example.com">
+      </div>
+      <div class="field">
+        <label>Password</label>
+        
+        <input type="password" id="l-pass" placeholder="Enter your password">
+        <button class="eye" onclick="tog('l-pass',this)">👁</button>
+      </div>
+      <div class="opt-row">
+        <label class="chk"><input type="checkbox"> Remember me</label>
+        <span class="fgt">Forgot password?</span>
+      </div>
+
+        <button class="btn google-btn" onclick="loginWithGoogle()">
+  <img src="https://www.google.com/favicon.ico" width="16" height="16" style="vertical-align:middle; margin-right:8px;">
+  Continue with Google
+</button>
+<div class="divider">or</div>
+
+      <button class="btn" onclick="doLogin()">Sign In to Your Forest</button>
+
+      
+    </div>
+  </div>
+</div>
+
+<!-- REGISTER -->
+<div class="page hidden" id="pg-register">
+  <div class="card">
+    <div class="lp">
+      <div class="lp-logo">Spent<span>ree</span></div>
+      <div class="lp-tree"><canvas id="lt2" width="320" height="380"></canvas></div>
+      <div class="lp-bottom">
+        <div class="lp-quote">Your <em>forest</em> starts<br>with a single tree.</div>
+        <div class="lp-desc">Join thousands of mindful spenders growing their financial future, one day at a time.</div>
+      </div>
+    </div>
+    <div class="rp">
+      <div class="tabs">
+        <button class="tab" onclick="switchTo('login')">Sign In</button>
+        <button class="tab active" onclick="switchTo('register')">Register</button>
+      </div>
+      <div class="ftitle">Plant your<br><em class="text-gradient">first seed.</em></div>
+      <div class="fsub">Already growing? <a onclick="switchTo('login')">Sign in →</a></div>
+      <div class="two">
+
+
+        <div class="field">
+          <label>First Name</label>
+          
+          <input type="text" id="r-fn" placeholder="Arjun">
+        </div>
+        <div class="field">
+          <label>Last Name</label>
+          
+          <input type="text" id="r-ln" placeholder="Sharma">
+        </div>
+      </div>
+
+      <div class="field">
+        <label>Email Address</label>
+        
+        <input type="email" id="r-email" placeholder="you@example.com">
+      </div>
+      
+      <div class="two">
+        
+        <div class="field">
+           <label>Password</label>
+            <input type="password" id="r-pass" placeholder="Strong password" oninput="strength(this)">
+            <button class="eye" onclick="tog('r-pass',this)">👁</button>
+            <div class="sbar" id="sbar"><div class="sfill" id="sfill"></div></div>
+        </div>
+
+        <div class="field">
+            <label>Confirm Password</label>
+            <input type="password" id="r-pass2" placeholder="Repeat password">
+            <button class="eye" onclick="tog('r-pass2',this)">👁</button>
+        </div>
+      
+      </div>
+      
+      <button class="btn google-btn" onclick="loginWithGoogle()">
+  <img src="https://www.google.com/favicon.ico" width="16" height="16" style="vertical-align:middle; margin-right:8px;">
+  Continue with Google
+</button>
+<div class="divider">or</div>
+      
+      <label class="agree">
+        <input type="checkbox" id="r-terms">
+        <span>I agree to the <a href="#" onclick="return false;">Terms</a> and <a href="#" onclick="return false;">Privacy Policy</a>.</span>
+      </label>
+    
+      <button class="btn" onclick="doRegister()"> Create My Forest</button>
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+<!-- EMAIL OTP MODAL -->
+<div class="modal-overlay" id="email-modal">
+  <div class="modal">
+    <button class="modal-close" onclick="closeEmailModal()">✕</button>
+    <div id="modal-step-1">
+      <div class="modal-title"> Sign in with Email</div>
+      <div class="modal-sub">Enter your email and we'll send a 6-digit code.</div>
+      <div class="field">
+        <label>Email Address</label>
+        <input type="email" id="magic-email" placeholder="you@example.com">
+      </div>
+      <button class="btn" style="margin-top:.4rem" onclick="sendOTP()"> Send Code</button>
+    </div>
+    <div id="modal-step-2" style="display:none">
+      <div class="modal-title"> Enter Your Code</div>
+      <div class="modal-sub">We sent a 6-digit code to <span id="otp-email-label" style="color:var(--primary-color)"></span>.<br>Check your inbox (hint: it's <strong id="otp-hint" style="color:var(--warning-color)"></strong>)</div>
+      <div class="otp-row">
+        <input class="otp-box" maxlength="1" id="o0" oninput="otpNext(0)">
+        <input class="otp-box" maxlength="1" id="o1" oninput="otpNext(1)">
+        <input class="otp-box" maxlength="1" id="o2" oninput="otpNext(2)">
+        <input class="otp-box" maxlength="1" id="o3" oninput="otpNext(3)">
+        <input class="otp-box" maxlength="1" id="o4" oninput="otpNext(4)">
+        <input class="otp-box" maxlength="1" id="o5" oninput="otpNext(5)">
+      </div>
+      <button class="btn" onclick="verifyOTP()"> Verify & Sign In</button>
+      <p style="text-align:center;font-size:.7rem;color:var(--text-muted);margin-top:.8rem;cursor:pointer" onclick="resendOTP()">Didn't get it? <span style="color:var(--primary-color)">Resend code</span></p>
+    </div>
+    <div id="modal-step-3" style="display:none;text-align:center">
+      <div style="font-size:2.5rem;margin-bottom:.8rem">🌿</div>
+      <div class="modal-title" style="margin-bottom:.6rem">You're in!</div>
+      <p style="font-size:.78rem;color:var(--text-muted);line-height:1.7">Signed in as <strong id="signed-in-as" style="color:var(--primary-color)"></strong>.<br>Your forest is growing...</p>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script src="auth.js?v=2"></script>
+</body>
+
+

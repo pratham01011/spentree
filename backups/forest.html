@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Spentree - Forest</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Outfit:wght@300;400;600;700;800&family=Press+Start+2P&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header style="text-align:center; padding:20px;">
+  <img src="/images/logo.jpeg" alt="Spentree Logo" style="height:80px;">
+</header>
+    <div class="ambient-glow glow-1"></div>
+    <div class="ambient-glow glow-2"></div>
+    <div class="ambient-glow glow-3"></div>
+
+    <!-- SVG Filters for glowing tree -->
+    <svg width="0" height="0" class="svg-definitions">
+        <defs>
+            <filter id="glow-effect" x="-20%" y="-20%" width="140%" height="140%">
+                <feGaussianBlur stdDeviation="8" result="blur" />
+                <feMerge>
+                    <feMergeNode in="blur" />
+                    <feMergeNode in="SourceGraphic" />
+                </feMerge>
+            </filter>
+        </defs>
+    </svg>
+
+    <nav class="glass-nav">
+        <div class="logo">Spentree🌿</div>
+        <div class="rank-badge" id="userRank">
+            <span class="rank-title">Novice Sprout</span>
+            <div class="xp-bar-container">
+                <div class="xp-bar" id="xpBar" style="width: 0%"></div>
+            </div>
+        </div>
+        <button id="logoutBtn" class="btn secondary-btn" type="button">Logout</button>
+        <div class="nav-links" id="navLinks">
+            <a href="index.html#hero">Philosophy</a>
+            <a href="index.html#app">Daily Tree</a>
+            <a href="index.html#forest">The Forest</a>
+            <a href="index.html#levels">Levels</a>
+            <a href="index.html#leaderboard">Leaderboard</a>
+            <a href="profile.html" class="profile-link" title="Profile">👤</a>
+        </div>
+    </nav>
+
+    <section id="app" class="app-section page-section active">
+        <div class="container container-center">
+            <div class="app-grid">
+                <div class="tree-display glass-card">
+                    <h2 class="mb-3">Your Daily Tree</h2>
+                    <div class="status-badge" id="statusBadge">Budget Ready 💰</div>
+                    
+                    <div class="svg-container" id="treeSvgContainer" style="margin-top: 2rem;">
+                        <svg viewBox="0 0 400 500" class="tree-svg" id="dailyTree">
+                            <defs>
+                                <linearGradient id="trunkGradient" x1="0" y1="0" x2="1" y2="0">
+                                    <stop offset="0%" stop-color="#4a3b2c" />
+                                    <stop offset="100%" stop-color="#3d2d1d" />
+                                </linearGradient>
+                            </defs>
+                            <path class="trunk" d="M 200 500 L 200 250 M 200 250 L 140 180 M 200 250 L 210 160 M 200 250 L 260 180 M 170 215 L 120 215" stroke="url(#trunkGradient)" stroke-width="20" fill="none" stroke-linecap="square" stroke-linejoin="miter"/>
+                            <g id="leavesGroup"></g>
+                        </svg>
+                    </div>
+                </div>
+
+                <div class="controls">
+                    <div class="glass-card mb-4 panel-content">
+                        <div class="control-header">
+                            <h3>Set Your Foundation</h3>
+                            <p>Determine a goal to plant today's seed.</p>
+                        </div>
+                        
+                        <div class="budget-section">
+                            <label for="dailyBudget">Daily Limit</label>
+                            <div class="input-group">
+                                <span class="currency">$</span>
+                                <input type="number" id="dailyBudget" placeholder="0.00" min="1">
+                            </div>
+                            <button id="setBudgetBtn" class="btn secondary-btn mt-3 w-100">Plant Daily Budget</button>
+                        </div>
+                    </div>
+
+                    <div class="glass-card mb-4 expense-section disabled" id="expenseSection">
+                        <div class="control-header">
+                            <h3>Log an Expense</h3>
+                        </div>
+                        <div class="form-group">
+                            <label for="expenseAmount">Cost</label>
+                            <div class="input-group">
+                                <span class="currency">$</span>
+                                <input type="number" id="expenseAmount" placeholder="0.00" min="0.01" step="0.01">
+                            </div>
+                        </div>
+                        <div class="form-group mt-3">
+                            <label for="expenseDesc">Description</label>
+                            <input type="text" id="expenseDesc" placeholder="e.g. Coffee, Lunch" class="text-input">
+                        </div>
+                        <button id="addExpenseBtn" class="btn primary-btn mt-3 w-100">Record Expense</button>
+                    </div>
+
+                    <div class="stats-overview">
+                        <div class="stat-box">
+                            <span class="stat-label">Total Spent</span>
+                            <span class="stat-value" id="totalSpent">$0.00</span>
+                        </div>
+                        <div class="stat-box highlighted-stat">
+                            <span class="stat-label">Remaining</span>
+                            <span class="stat-value" id="totalRemaining">$0.00</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="logs-container glass-card mt-5">
+                <div class="flex-between">
+                    <h3 id="logsHeader">Today's Logs</h3>
+                    <div class="logs-buttons">
+                        <button class="btn secondary-btn" id="backToTodayBtn" style="display:none;">Back to Today</button>
+                        <button class="btn accent-btn" id="finishDayBtn" disabled>Finish Day & Add to Forest</button>
+                    </div>
+                </div>
+                <ul id="expenseList" class="expense-list">
+                    <li class="empty-state">No costs logged yet. Watch your tree grow!</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <section id="forest" class="forest-section page-section active">
+        <div class="container text-center">
+            <h2 class="mb-3">Your Eternal Forest</h2>
+            <p class="subtitle mb-5">Every completed day contributes a new tree to your long-term ecosystem.</p>
+            
+            <div class="forest-grid" id="forestGrid">
+                <div class="empty-forest glass-card">
+                    <h4 class="mb-2">The forest is empty</h4>
+                    <p>Complete a daily budget to plant your first tree.</p>
+                </div>
+            </div>
+            
+            <button class="btn secondary-btn mt-5" id="clearForestBtn">Clear Data</button>
+        </div>
+    </section>
+
+    <script src="app.js"></script>
+</body>
+</html>
+

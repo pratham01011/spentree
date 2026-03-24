@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Spentree - Profile</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Outfit:wght@300;400;600;700;800&family=Press+Start+2P&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header style="text-align:center; padding:20px;">
+  <img src="/images/logo.jpeg" alt="Spentree Logo" style="height:80px;">
+</header>
+    <div class="ambient-glow glow-1"></div>
+    <div class="ambient-glow glow-2"></div>
+    <div class="ambient-glow glow-3"></div>
+
+    <nav class="glass-nav">
+       <div class="logo"><img src="/images/logo (1).png" alt="Spentree Logo" style="height:80px;"></div>
+        
+        <div class="rank-badge" id="userRank">
+            <span class="rank-title" id="navRankTitle">🌱 Seed</span>
+            <div class="xp-bar-container">
+                <div class="xp-bar" id="xpBar" style="width: 0%"></div>
+            </div>
+            <span class="nav-xp-label" id="navXpLabel">0 XP</span>
+        </div>
+
+        <!-- Streak pill in nav -->
+        <div class="nav-streak-pill" id="navStreakPill">
+            <span class="nav-streak-flame">🔥</span>
+            <span class="nav-streak-num" id="navStreakNum">0</span>
+        </div>
+        
+        <div class="nav-links" id="navLinks">
+            <a href="index.html#hero">DashBoard</a>
+            <a href="index.html#app">Daily Tree</a>
+            <a href="index.html#forest">The Forest</a>
+            <a href="index.html#levels">Ranks</a>
+            <a href="index.html#leaderboard">Leaderboard</a>
+            <a href="index.html#themes">Themes</a>
+            <a href="profile.html" class="profile-link" title="Profile">Profile</a>
+        </div>
+    </nav>
+
+    <section class="profile-section page-section active">
+        <div class="container container-center" style="max-width: 600px;">
+            <h2 class="mb-5">User Profile</h2>
+            <div class="glass-card profile-card">
+                <div class="profile-header">
+                    <div class="profile-avatar-wrap">
+                        <div class="profile-avatar" id="profileAvatarBox">
+                            <img id="profileAvatarImg" alt="" class="profile-avatar-img" style="display: none;">
+                            <span id="profileAvatarPlaceholder" class="profile-avatar-placeholder">🌳</span>
+                        </div>
+                        <input type="file" id="profileAvatarInput" accept="image/*" hidden>
+                        <button type="button" class="btn secondary-btn profile-avatar-btn" id="profileAvatarBtn">Change photo</button>
+                    </div>
+                    <div class="profile-name-section">
+                        <div class="profile-name-wrapper">
+                            <h3 id="profileNameDisplay">You</h3>
+                            <button id="editNameBtn" class="edit-name-btn" title="Edit name">✎</button>
+                        </div>
+                        <p id="profileRank" class="profile-rank">Novice Sprout</p>
+                    </div>
+                </div>
+
+                <div id="editNameForm" class="edit-name-form" style="display: none; margin-bottom: 2rem; padding: 1.5rem; background: rgba(46, 204, 113, 0.05); border-radius: 12px; border: 1px solid var(--glass-border);">
+                    <label for="nameInput" style="display: block; color: var(--text-muted); margin-bottom: 0.5rem; font-size: 0.9rem;">Enter your name:</label>
+                    <div style="display: flex; gap: 0.5rem;">
+                        <input type="text" id="nameInput" class="text-input" placeholder="Your name" style="flex: 1;">
+                        <button id="saveNameBtn" class="btn primary-btn">Save</button>
+                        <button id="cancelNameBtn" class="btn secondary-btn">Cancel</button>
+                    </div>
+                </div>
+
+                <div class="profile-stats">
+                    <div class="profile-stat">
+                        <span class="stat-label">Total XP</span>
+                        <span class="stat-value" id="profileXP">0</span>
+                    </div>
+                    <div class="profile-stat">
+                        <span class="stat-label">Days Completed</span>
+                        <span class="stat-value" id="profileDaysCompleted">0</span>
+                    </div>
+                    <div class="profile-stat">
+                        <span class="stat-label">Total savings (under budget)</span>
+                        <span class="stat-value" id="profileTotalSavings">₹0.00</span>
+                    </div>
+                    <div class="profile-stat">
+                        <span class="stat-label">Personal best streak</span>
+                        <span class="stat-value" id="profileBestStreak">0</span>
+                    </div>
+                    <div class="profile-stat">
+                        <span class="stat-label">Total Budget</span>
+                        <span class="stat-value" id="profileTotalBudget">₹0.00</span>
+                    </div>
+                    <div class="profile-stat">
+                        <span class="stat-label">Total Spent</span>
+                        <span class="stat-value" id="profileTotalSpent">₹0.00</span>
+                    </div>
+                </div>
+
+                <div class="profile-progress">
+                    <h4 class="mb-3">Progress to Next Rank</h4>
+                    <div class="level-bar">
+                        <div class="level-fill" id="profileLevelFill"></div>
+                    </div>
+                    <p id="profileProgressText" style="font-size: 0.9rem; color: var(--text-muted); margin-top: 0.5rem;">0/3 XP</p>
+                </div>
+                <br>
+                <button id="logoutBtn" class="btn secondary-btn" type="button">Logout</button>
+            </div>
+            
+        </div>
+    </section>
+
+    <footer class="app-footer">
+        <div class="container text-center">
+            <p>Spentree — Grow wealth with mindful habits.</p>
+        </div>
+    </footer>
+
+    <script src="app.js"></script>
+        <script src="streak-rank-system.js"></script>
+
+</body>
+</html>
