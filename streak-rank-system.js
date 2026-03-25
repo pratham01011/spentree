@@ -9,7 +9,7 @@ const SPENTREE_THEMES = [
     id: 'forest',
     name: 'Forest',
     emoji: '🌲',
-    unlockStreak: 0,
+    unlockXP: 0,
     description: 'The classic green grove',
     vars: {
       '--primary-color': '#2ecc71',
@@ -27,7 +27,7 @@ const SPENTREE_THEMES = [
     id: 'cherry',
     name: 'Cherry Blossom',
     emoji: '🌸',
-    unlockStreak: 3,
+    unlockXP: 5,
     description: 'Soft pink petals at dusk',
     vars: {
       '--primary-color': '#e91e8c',
@@ -45,7 +45,7 @@ const SPENTREE_THEMES = [
     id: 'ocean',
     name: 'Deep Ocean',
     emoji: '🌊',
-    unlockStreak: 5,
+    unlockXP: 10,
     description: 'Bioluminescent depths',
     vars: {
       '--primary-color': '#00bcd4',
@@ -63,7 +63,7 @@ const SPENTREE_THEMES = [
     id: 'ember',
     name: 'Ember Dusk',
     emoji: '🔥',
-    unlockStreak: 10,
+    unlockXP: 20,
     description: 'Warm fire on dark nights',
     vars: {
       '--primary-color': '#ff6f00',
@@ -81,7 +81,7 @@ const SPENTREE_THEMES = [
     id: 'aurora',
     name: 'Aurora',
     emoji: '🌌',
-    unlockStreak: 20,
+    unlockXP: 35,
     description: 'Northern lights at midnight',
     vars: {
       '--primary-color': '#7c4dff',
@@ -204,12 +204,11 @@ function updateStreakBanner(currentStreak, longestStreak) {
   if (dotsEl) {
     dotsEl.innerHTML = STREAK_MILESTONES.map(m => {
       const reached = currentStreak >= m;
-      const thm     = SPENTREE_THEMES.find(t => t.unlockStreak === m);
-      const tip     = thm ? `🎨 Unlock ${thm.name}` : `${m}🔥 milestone`;
+      const tip     = `${m}🔥 streak milestone`;
       return `
-        <div class="streak-dot ${reached ? 'reached' : ''} ${thm ? 'is-theme' : ''}">
+        <div class="streak-dot ${reached ? 'reached' : ''}">
           <span class="streak-dot-num">${m}</span>
-          <span class="streak-dot-icon">${thm ? '🎨' : '🔥'}</span>
+          <span class="streak-dot-icon">🔥</span>
           <span class="streak-dot-tip">${tip}</span>
         </div>`;
     }).join('');
@@ -284,12 +283,12 @@ function renderRankLadder(currentXP) {
 }
 
 // ─── THEME PICKER ────────────────────────────────────────────────────────────
-function renderThemePicker(currentStreak, activeThemeId) {
+function renderThemePicker(currentXP, activeThemeId) {
   const grid = document.getElementById('themePickerGrid');
   if (!grid) return;
 
   grid.innerHTML = SPENTREE_THEMES.map(theme => {
-    const unlocked = currentStreak >= theme.unlockStreak;
+    const unlocked = currentXP >= theme.unlockXP;
     const isActive = theme.id === activeThemeId;
     return `
       <div class="theme-card ${isActive ? 'theme-active' : ''} ${!unlocked ? 'theme-locked' : ''}"
@@ -299,14 +298,14 @@ function renderThemePicker(currentStreak, activeThemeId) {
         <div class="theme-card-desc">${theme.description}</div>
         <div class="theme-card-unlock ${unlocked ? 'unlocked' : ''}">
           ${unlocked
-            ? (theme.unlockStreak === 0 ? 'Always available ✓' : `Unlocked at ${theme.unlockStreak}🔥`)
-            : `🔒 Reach ${theme.unlockStreak}🔥 streak`}
+            ? (theme.unlockXP === 0 ? 'Always available ✓' : `Unlocked at ${theme.unlockXP} XP ✓`)
+            : `🔒 Reach ${theme.unlockXP} XP to unlock`}
         </div>
         ${isActive ? '<div class="theme-active-badge">✓</div>' : ''}
         ${!unlocked ? `
           <div class="theme-lock-overlay">
             <span class="theme-lock-overlay-icon">🔒</span>
-            <span class="theme-lock-overlay-txt">${theme.unlockStreak}🔥</span>
+            <span class="theme-lock-overlay-txt">${theme.unlockXP} XP</span>
           </div>` : ''}
       </div>`;
   }).join('');
@@ -315,31 +314,30 @@ function renderThemePicker(currentStreak, activeThemeId) {
     card.addEventListener('click', () => {
       const id = card.dataset.themeId;
       applyTheme(id);
-      renderThemePicker(currentStreak, id);
+      renderThemePicker(currentXP, id);
     });
   });
 }
 
-// ─── THEMES PAGE STREAK ROW ──────────────────────────────────────────────────
-function updateThemesStreakRow(currentStreak, longestStreak) {
+// ─── THEMES PAGE XP ROW ──────────────────────────────────────────────────────
+function updateThemesStreakRow(currentStreak, longestStreak, currentXP) {
   const set = (id, val) => { const el = document.getElementById(id); if (el) el.textContent = val; };
-  set('themesStreakCurrent', currentStreak);
-  set('themesStreakBest',    longestStreak);
-  const next = SPENTREE_THEMES.find(t => t.unlockStreak > currentStreak);
-  set('themesNextUnlock', next ? `${next.emoji} at ${next.unlockStreak}🔥` : 'All unlocked! 🎉');
+  set('themesStreakCurrent', currentXP);
+  const next = SPENTREE_THEMES.find(t => t.unlockXP > currentXP);
+  set('themesNextUnlock', next ? `Unlocks at ${next.unlockXP} XP` : 'All unlocked! 🎉');
 }
 
 // ─── NEW UNLOCK DETECTION ────────────────────────────────────────────────────
-let _lastKnownStreak = parseInt(localStorage.getItem('spentree_last_streak') || '0', 10);
+let _lastKnownXP = parseInt(localStorage.getItem('spentree_last_xp') || '0', 10);
 
-function checkAndAnnounceUnlocks(newStreak) {
+function checkAndAnnounceUnlocks(currentXP) {
   SPENTREE_THEMES.forEach(theme => {
-    if (theme.unlockStreak > 0 && _lastKnownStreak < theme.unlockStreak && newStreak >= theme.unlockStreak) {
+    if (theme.unlockXP > 0 && _lastKnownXP < theme.unlockXP && currentXP >= theme.unlockXP) {
       setTimeout(() => showUnlockToast(theme), 800);
     }
   });
-  _lastKnownStreak = newStreak;
-  localStorage.setItem('spentree_last_streak', newStreak);
+  _lastKnownXP = currentXP;
+  localStorage.setItem('spentree_last_xp', currentXP);
 }
 
 // ─── MAIN ENTRY POINT ────────────────────────────────────────────────────────
@@ -350,14 +348,14 @@ function updateStreakSystem(forest) {
   ).length;
   const activeThemeId = getActiveThemeId();
 
-  checkAndAnnounceUnlocks(currentStreak);
+  checkAndAnnounceUnlocks(currentXP);        // now XP-based
   applyTheme(activeThemeId);
   updateStreakBanner(currentStreak, longestStreak);
   updateNavRank(currentXP);
   updateRankHeroCard(currentXP);
   renderRankLadder(currentXP);
-  renderThemePicker(currentStreak, activeThemeId);
-  updateThemesStreakRow(currentStreak, longestStreak);
+  renderThemePicker(currentXP, activeThemeId);          // now XP-based
+  updateThemesStreakRow(currentStreak, longestStreak, currentXP); // passes XP too
 }
 
 // ─── EXPOSE GLOBALS ──────────────────────────────────────────────────────────
@@ -365,9 +363,6 @@ window.updateStreakSystem = updateStreakSystem;
 window.applyTheme         = applyTheme;
 window.SPENTREE_THEMES    = SPENTREE_THEMES;
 window.SPENTREE_RANKS     = SPENTREE_RANKS;
-window.computeStreaks     = computeStreaks;
-window.getRankForXP       = getRankForXP;
-window.getNextRankForXP   = getNextRankForXP;
 
 // Apply saved theme immediately on load (before API data arrives)
 applyTheme(getActiveThemeId());
